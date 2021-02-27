@@ -1,31 +1,38 @@
-// new CountdownTimer({
-//   selector: '#timer-1',
-//   targetDate: new Date('Jul 17, 2019'),
-// });
+class CountdownTimer {
+  constructor({ selector, targetDate }) {
+    this.selector = selector;
+    this.targetDate = targetDate;
+    this.targetDateInMS = targetDate.getTime();
+    this.daysRef = document.querySelector('[data-value="days"]');
+    this.hoursRef = document.querySelector('[data-value="hours"]');
+    this.minsRef = document.querySelector('[data-value="mins"]');
+    this.secsRef = document.querySelector('[data-value="secs"]');
+    this.dateNow = this.dateNow.bind(this);
+  }
 
-const targetDate = new Date(2021, 6, 17);
-const targetDateInMS = targetDate.getTime();
-const daysRef = document.querySelector('[data-value="days"]');
-const hoursRef = document.querySelector('[data-value="hours"]');
-const minsRef = document.querySelector('[data-value="mins"]');
-const secsRef = document.querySelector('[data-value="secs"]');
-let intervalId = null;
-console.log();
+  dateNow() {
+    this.time = this.targetDateInMS - Date.now();
+    this.days = Math.floor(this.time / (1000 * 60 * 60 * 24));
+    this.hours = Math.floor(
+      (this.time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+    );
+    this.mins = Math.floor((this.time % (1000 * 60 * 60)) / (1000 * 60));
+    this.secs = Math.floor((this.time % (1000 * 60)) / 1000);
 
-const dateNow = () => {
-  let time = targetDateInMS - Date.now();
-  const days = Math.floor(time / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  const mins = Math.floor((time % (1000 * 60 * 60)) / (1000 * 60));
-  const secs = Math.floor((time % (1000 * 60)) / 1000);
-  daysRef.textContent = `${days}`;
-  hoursRef.textContent = `${hours}`;
-  minsRef.textContent = `${mins}`;
-  secsRef.textContent = `${secs}`;
-};
+    this.daysRef.textContent = `${this.days}`;
+    this.hoursRef.textContent = `${this.hours}`;
+    this.minsRef.textContent = `${this.mins}`;
+    this.secsRef.textContent = `${this.secs}`;
+  }
 
-const currentTime = () => {
-  return setInterval(dateNow, 1000);
-};
+  currentTime() {
+    return setInterval(this.dateNow, 1000);
+  }
+}
 
-currentTime();
+const newTimer = new CountdownTimer({
+  selector: '#timer-1',
+  targetDate: new Date(2021, 6, 17),
+});
+
+newTimer.currentTime();
